@@ -4,7 +4,10 @@
 
 * {margin: 0; padding: 0;}
 body {
-	  background: url(../img/bg.jpg) no-repeat center center fixed; 
+	background: url(../img/bg.jpg) no-repeat center center fixed; 
+        /* background-size: cover 
+        scale the background image to be as large as possible so that the
+        background area is completely covered by background image */
   	-webkit-background-size: cover;
   	-moz-background-size: cover;
   	-o-background-size: cover;
@@ -16,8 +19,16 @@ body {
 /*general styles*/
 h1 {font-weight: normal; font-size: 36px; margin-bottom: 75px;}
 
+/* scale the icon to 10 time its normal size and transparent */
 .envelope i {-webkit-transform: scale(10);-ms-transform: scale(10);transform: scale(10); opacity: 0.1;}
 
+
+/* The perspective property defines how many pixels a 3D element is placed from the view. 
+This property allows you to change the perspective on how 3D elements are viewed.
+When defining the perspective property for an element, it is the CHILD elements that 
+get the perspective view, NOT the element itself. */
+
+/* To get an idea of how the perspective changes the view, try playing with values: 10, 100, and 1000px */
 #cuboid {
 	width: 400px; margin: 0 auto;
 	/*this also makes #cuboid a container for absolutely positioned descendants*/
@@ -25,32 +36,34 @@ h1 {font-weight: normal; font-size: 36px; margin-bottom: 75px;}
 	perspective: 1000px;
 }
 #cuboid form {
-	/*counter translate*/
+	/*counter translate - push form a little back */
 	-webkit-transform: translateZ(-20px);
 	-ms-transform: translateZ(-20px);
 	transform: translateZ(-20px);
-	/*propogate 3d space for children*/
-	-webkit-transform-style: preserve-3d;
+	/*propogate 3d space for children, if you turn this off, all cuboid > form > div will be laid on top of each other with their respective rotations*/
+	-webkit-transform-style: preserve-3d;        
 	transform-style: preserve-3d;
 	/*prevent height collapse as children are absolutely positioned*/
 	height: 40px;
-	/*for smooth animations*/
+	/*for smooth animations, without set transitions happens instantly*/
 	-webkit-transition: all 0.35s;
 	transition: all 0.35s;
 }
 
-/*faces*/
+/* faces */
 .cuboid-text {
-	/*each face will be 40px high*/
+	/*each face will be 40px high, set text height to match*/
 	line-height: 40px; height: 40px;
 	background: hsl(200, 40%, 20%);
+        /* don't allow text to cover icon */
+        padding-right: 25px;
 }
 .loader {
-	background: hsl(200, 40%, 30%);
+	background: hsl(200, 40%, 30%);        
 	-webkit-animation: phase 1s infinite;
 	animation: phase 1s infinite;
 }
-/*Lets create a pulsating animation for the loader face*/
+/* Lets create a pulsating animation for the loader face*/
 @-webkit-keyframes phase {
 	50% {background: hsl(200, 90%, 30%);}
 }
@@ -60,14 +73,20 @@ h1 {font-weight: normal; font-size: 36px; margin-bottom: 75px;}
 #email {
 	background: white; outline: none; border: 0 none;
 	font: inherit; text-align: left; color: hsl(200, 40%, 30%);
-	display: block; width: 100%; padding: 0 10px;
+	width: 100%; padding: 0 10px;
+        /* forces the browser to render the box with the specified width and height, and place the border and padding inside the box */
+        /* if you don't have this the input area will bleed over right edge */
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+        /* don't allow text to cover icon */
+        padding-right: 25px;
 }
+/* hide the display button */
 #submit {display: none;}
 
 .submit-icon, .reset-icon {
+        /* set icons to top right */
 	position: absolute; top: 0; right: 0;
 	color: hsla(30, 50%, 30%, 0.20);
 	line-height: 40px; padding: 0 10px;
@@ -77,19 +96,23 @@ h1 {font-weight: normal; font-size: 36px; margin-bottom: 75px;}
 	/*to make the icons feel like buttons*/
 	cursor: pointer;
 }
-/*.active = when the user is typing something*/
+/* .active = when the user is typing something*/
 .submit-icon.active {color: hsl(30, 70%, 70%);}
 .reset-icon {color: hsla(0, 100%, 100%, 0.25); font-size: 14px;}
 
 #cuboid div {position: absolute; top: 0; left: 0; width: 100%;}
 
-/*3D transforms. Each face will be rotated in multiples of -90deg and moved 20px(half of their 40px height) out*/
+/* 3D transforms. Each face will be rotated in multiples of -90deg and moved 20px(half of their 40px height) out so that they don't overlay the screen'*/
+/* this rotates each sub div and creates the 'cube' */
+/* to experiment, try changing just the first child's translateZ to 120px */
+/* NOTE, STILL NOT WORKING ON IE, follow up with link here:  http://css-tricks.com/forums/topic/preserve-3d-workaround-for-ie10/ */
 #cuboid div:nth-child(1) {-webkit-transform: rotateX(0deg) translateZ(20px);-ms-transform: rotateX(0deg) translateZ(20px);transform: rotateX(0deg) translateZ(20px);}
 #cuboid div:nth-child(2) {-webkit-transform: rotateX(-90deg) translateZ(20px);-ms-transform: rotateX(-90deg) translateZ(20px);transform: rotateX(-90deg) translateZ(20px);}
 #cuboid div:nth-child(3) {-webkit-transform: rotateX(-180deg) translateZ(20px);-ms-transform: rotateX(-180deg) translateZ(20px);transform: rotateX(-180deg) translateZ(20px);}
 #cuboid div:nth-child(4) {-webkit-transform: rotateX(-270deg) translateZ(20px);-ms-transform: rotateX(-270deg) translateZ(20px);transform: rotateX(-270deg) translateZ(20px);}
 
-/*the form will have 4 states/classes(default+3) for rotation*/
+/* the form will have 4 states/classes(default+3) for rotation*/
+/* this rotates the whole form, change the face of the cube that is visible */
 #cuboid form:hover, 
 #cuboid form.ready {-webkit-transform: translateZ(-20px) rotateX(90deg);-ms-transform: translateZ(-20px) rotateX(90deg);transform: translateZ(-20px) rotateX(90deg);}
 #cuboid form.loading {-webkit-transform: translateZ(-20px) rotateX(180deg);-ms-transform: translateZ(-20px) rotateX(180deg);transform: translateZ(-20px) rotateX(180deg);}
